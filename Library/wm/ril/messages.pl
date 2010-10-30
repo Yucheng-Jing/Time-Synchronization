@@ -9,26 +9,26 @@ my $messages = 'messages';
 open my $impl, '>', "$messages.cpp";
 open my $interface, '>', "$messages.h";
 
-print $impl (<< "EOT");
+print $impl (<< "C++");
 #include "$messages.h"
 
 
 static const TCHAR* _messages[] = {
     NULL,
-EOT
+C++
 
 while (my $line = <STDIN>) {
     if ($line =~ m/(RIL_E_\w+)[^\@]+\@constdefine\s+(.+)$/) {
         my $constant = $1;
         my $text = ucfirst($2) . ($2 =~ m/\.$/ ? '' : '.');
         
-        print $impl (<< "EOT");
+        print $impl (<< "C++");
     TEXT("$text"), // $constant
-EOT
+C++
     }
 }
 
-print $impl (<< 'EOT');
+print $impl (<< 'C++');
     NULL
 };
 
@@ -45,9 +45,9 @@ namespace Ril {
         }
     }
 }}}
-EOT
+C++
 
-print $interface (<< "EOT");
+print $interface (<< "C++");
 #pragma once
 
 
@@ -59,7 +59,7 @@ namespace Api {
 namespace Ril {
     const TCHAR* GetErrorMessage(HRESULT result);
 }}}
-EOT
+C++
 
 close $impl;
 close $interface;

@@ -51,7 +51,7 @@ sub implementation {
     my $file = File::Spec->catfile(@namespace, "$name.cpp");
     
     open my $output, '>', $file;
-    print $output (<< "EOT");
+    print $output (<< "C++");
 #include "$name.h"
 
 
@@ -74,13 +74,13 @@ sub implementation {
 static HINSTANCE _library = NULL;
 
 
-EOT
+C++
     
     foreach my $part (@namespace) {
         print $output "namespace $part {\n";
     }
     
-    print $output (<< "EOT");
+    print $output (<< "C++");
     HINSTANCE Load() {
         if (_library == NULL) {
             _library = LoadLibrary(TEXT("$library"));
@@ -106,7 +106,7 @@ EOT
         
         return true;
     }
-EOT
+C++
     
     print $output '}' x @namespace, "\n";
     close $output;
@@ -145,7 +145,7 @@ sub interface {
     my $file = File::Spec->catfile(@namespace, "$name.h");
     
     open my $output, '>', $file;
-    print $output (<< "EOT");
+    print $output (<< "C++");
 #ifndef $header
 #define $header
 
@@ -173,13 +173,13 @@ sub interface {
 #endif
 
 
-EOT
+C++
     
     foreach my $part (@namespace) {
         print $output "namespace $part {\n";
     }
     
-    print $output (<< 'EOT');
+    print $output (<< 'C++');
     HINSTANCE Load();
     bool Unload();
     
@@ -189,31 +189,31 @@ static void LoadFunctions(HINSTANCE library) {
 static void UnloadFunctions() {
 #endif
     
-EOT
+C++
     
     foreach my $function (functions($wrapper->include_file())) {
         my ($return, $name, $args) = @$function{qw(return name args)};
-        print $output (<< "EOT");
+        print $output (<< "C++");
     API_FUNCTION($return, $name, $args);
-EOT
+C++
     }
     
-    print $output (<< 'EOT');
+    print $output (<< 'C++');
     
 #if defined(API_FUNCTION_LOADER) || defined(API_FUNCTION_UNLOADER)
 }
 #endif
-EOT
+C++
     
     print $output '}' x @namespace, "\n";
-    print $output (<< 'EOT');
+    print $output (<< 'C++');
 
 
 #undef API_FUNCTION
 
 
 #endif
-EOT
+C++
     close $output;
 }
 
